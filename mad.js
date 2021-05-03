@@ -4,11 +4,4 @@ function s_html(s_id,response){document.getElementById(s_id).innerHTML=response;
 function g_html(g_id){return document.getElementById(g_id).innerHTML;}
 function s_value(s_id,svalue){document.getElementById(s_id).value=svalue;}
 function g_value(g_id){return document.getElementById(g_id).value;}
-function center_div(div_id){
-var body = document.body,
-    html = document.documentElement;
-var height = Math.max( body.scrollHeight, body.offsetHeight, 
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
-var div_h = document.getElementById(div_id).offsetHeight;					   
-document.getElementById(div_id).style.marginTop = (height / 2) -  + (div_h / 2) + "px";	
-}
+function center_div(e){var t=document.body,n=document.documentElement,o=Math.max(t.scrollHeight,t.offsetHeight,n.clientHeight,n.scrollHeight,n.offsetHeight),c=document.getElementById(e).offsetHeight;document.getElementById(e).style.marginTop=o/2-+c/2+"px"}
