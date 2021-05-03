@@ -1,0 +1,23 @@
+#toastsContainerTopRight {z-index:7000;}
+.link-btn{width:26px;height:26px;padding:4.5px}
+.action-btn{padding:6px;width:32px;height:32px}
+.mad-red{color:#fff;background: linear-gradient(90deg, #cc0000, #ff0000);}
+.mad-blue{color:#fff;background: linear-gradient(90deg, #000099, #0000ff);}
+.mad-yellow{color:#fff;background: linear-gradient(90deg,  #e6e600, #ffff00);}
+.mad-green{color:#fff;background: linear-gradient(90deg,  #004d00, #008000);}
+.mad-white{color:#000;background: linear-gradient(90deg,  #f2f2f2, #ffffff);}
+.mad-light{color:#000;background: linear-gradient(90deg,  #d9d9d9, #e6e6e6);}
+.mad-pink{color:#fff;background: linear-gradient(90deg,  ##ff99aa, #ffc0cb);}
+.mad-teal{color:#fff;background: linear-gradient(90deg,  #006666, #008080);}
+.mad-black{color:#fff;background: linear-gradient(45deg,  #333333, #000000);}
+.mad-gray{color:#fff;background: linear-gradient(90deg,  #666666, #808080);}
+.mad-brown{color:#fff;background: linear-gradient(90deg,  #8e2525, #a52a2a);}
+.mad-cyan{color:#000;background: linear-gradient(90deg,  #00cccc, #00ffff);}
+.mad-violet{color:#000;background: linear-gradient(90deg,  #ea62ea, #ee82ee);}
+.mad-magenta{color:#000;background: linear-gradient(90deg,  #cc00cc, #ff00ff);}
+.mad-maroon{color:#fff;background: linear-gradient(90deg,  #660000, #800000);}
+.mad-silver{color:#fff;background: linear-gradient(90deg,  #a6a6a6, #c0c0c0);}
+.mad-olive{color:#fff;background: linear-gradient(90deg,  #666600, #808000);}
+.mad-navy{color:#fff;background: linear-gradient(90deg,  #00004d, #000080);}
+.mad-lime{color:#000;background: linear-gradient(90deg,  #00cc00, #00ff00);}
+.mad-orange{color:#fff;background: linear-gradient(90deg,  #cc8500, #ffa500);}
