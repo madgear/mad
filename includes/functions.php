@@ -50,7 +50,7 @@ function check_error(){
 }
 
 function return_json($query){
-    $get_rows = ExecuteRows($query);
+    $get_rows = return_rows($query);
     if (is_array($get_rows)) {                    
         foreach ($get_rows as $get_row) {
             $array[] = $get_row;
@@ -70,6 +70,5 @@ function return_json($query){
             echo json_encode($dataset);
     }	
 }
-
 
 ?>
