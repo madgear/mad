@@ -17,7 +17,7 @@ if($route == '/'){
   $arr_size = count($arr);
   include 'file.php';  
 }else{
-  echo '404 ';
+  echo '<body style="background-color:black"><div class="container" style="margin-top:100px;color:white;font-family:arial" align="center"><h1>ERROR 404, PAGE NOT FOUND!</h1></div></body>';
   exit;
 }
 
