@@ -3,7 +3,7 @@ class db_connection
 {
 
     public $host = "localhost";
-    public $dbname = "sie_schedule_project";
+    public $dbname = "";
     public $username = "root";
     public $password = "";
     public $conn;
