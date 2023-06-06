@@ -127,3 +127,82 @@ $response = array(
 );
 echo json_encode($response);
 ?>
+
+
+
+eventDrop: function(info) {
+  var event = info.event;
+  
+  // Retrieve the updated start and end dates of the event
+  var newStart = event.start;
+  var newEnd = event.end;
+
+  // If the event is a recurring event, update the corresponding occurrences in the database
+  if (event.isRecurring()) {
+    var eventSeriesId = event.extendedProps.eventSeriesId;
+    
+    // Send an AJAX request to your PHP script to update the occurrences in the database
+    // Include the eventSeriesId, newStart, and newEnd in the request
+    
+    // Example AJAX request using jQuery:
+    $.ajax({
+      url: 'update_recurring_events.php',
+      type: 'POST',
+      data: {
+        eventSeriesId: eventSeriesId,
+        newStart: newStart,
+        newEnd: newEnd
+      },
+      success: function(response) {
+        // Handle the success response
+        console.log('Recurring events updated successfully');
+      },
+      error: function(xhr, status, error) {
+        // Handle the error response
+        console.error('Error updating recurring events: ' + error);
+      }
+    });
+  }
+}
+
+
+
+
+
+
+
+
+eventReceive: function(info) {
+  var event = info.event;
+  
+  // Retrieve the start and end dates of the newly created event
+  var start = event.start;
+  var end = event.end;
+
+  // If the event is a recurring event, insert the corresponding occurrences into the database
+  if (event.isRecurring()) {
+    var eventSeriesId = event.extendedProps.eventSeriesId;
+    
+    // Send an AJAX request to your PHP script to insert the occurrences into the database
+    // Include the eventSeriesId, start, and end in the request
+    
+    // Example AJAX request using jQuery:
+    $.ajax({
+      url: 'insert_recurring_events.php',
+      type: 'POST',
+      data: {
+        eventSeriesId: eventSeriesId,
+        start: start,
+        end: end
+      },
+      success: function(response) {
+        // Handle the success response
+        console.log('Recurring events inserted successfully');
+      },
+      error: function(xhr, status, error) {
+        // Handle the error response
+        console.error('Error inserting recurring events: ' + error);
+      }
+    });
+  }
+}
