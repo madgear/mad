@@ -68,3 +68,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
   calendar.render();
 });
+
+
+
+<?php
+// Assuming you have established a database connection
+
+// Parse the event data received from the AJAX request
+$eventData = $_POST['eventData'];
+$title = $eventData['title'];
+$start = $eventData['start'];
+$end = $eventData['end'];
+$recurringPattern = $eventData['recurringPattern'];
+
+// Insert the event series into the database
+$query = "INSERT INTO events (title, start, end, recurring_pattern) VALUES ('$title', '$start', '$end', '$recurringPattern')";
+$result = mysqli_query($connection, $query);
+
+// Get the ID of the event series
+$eventSeriesId = mysqli_insert_id($connection);
+
+// Calculate the individual occurrences based on the recurring pattern
+// Here, you would implement the logic to generate the individual occurrences based on the recurring pattern and insert them into the database as separate records associated with the event series ID
+
+// Close the database connection
+mysqli_close($connection);
+
+// Return a response to the AJAX request
+$response = array(
+  'success' => true,
+  'message' => 'Recurring event added successfully'
+);
+echo json_encode($response);
+?>
+
+
+<?php
+// Assuming you have established a database connection
+
+// Retrieve the event series ID from the AJAX request
+$eventSeriesId = $_POST['eventSeriesId'];
+
+// Delete all occurrences associated with the event series ID
+$query = "DELETE FROM events WHERE event_series_id = $eventSeriesId";
+$result = mysqli_query($connection, $query);
+
+// Delete the event series itself
+$query = "DELETE FROM event_series WHERE id = $eventSeriesId";
+$result = mysqli_query($connection, $query);
+
+// Close the database connection
+mysqli_close($connection);
+
+// Return a response to the AJAX request
+$response = array(
+  'success' => true,
+  'message' => 'Recurring event deleted successfully'
+);
+echo json_encode($response);
+?>
