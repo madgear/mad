@@ -236,3 +236,12 @@ $response = array(
 );
 echo json_encode($response);
 ?>
+
+
+
+Same Table:
+
+Create a single table, such as events, to store both recurring events and single events.
+Include columns to store information about the event, such as title, start date, end date, and the recurring pattern.
+For recurring events, you can store the pattern in a specific format (e.g., using JSON or a serialized string) to indicate that it is a recurring event.
+For single events, the recurring pattern column can be left empty or null.
