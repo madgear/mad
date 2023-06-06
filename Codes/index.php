@@ -206,3 +206,33 @@ eventReceive: function(info) {
     });
   }
 }
+
+
+<?php
+// Assuming you have established a database connection
+
+// Parse the event data received from the AJAX request
+$eventData = $_POST['eventData'];
+$title = $eventData['title'];
+$start = $eventData['start'];
+$end = $eventData['end'];
+$recurringPattern = $eventData['recurringPattern'];
+
+// Insert the event series into the database
+$query = "INSERT INTO event_series (title, recurring_pattern) VALUES ('$title', '$recurringPattern')";
+$result = mysqli_query($connection, $query);
+
+// Get the ID of the event series
+$eventSeriesId = mysqli_insert_id($connection);
+
+// Close the database connection
+mysqli_close($connection);
+
+// Return a response to the AJAX request
+$response = array(
+  'success' => true,
+  'message' => 'Recurring event series added successfully',
+  'eventSeriesId' => $eventSeriesId
+);
+echo json_encode($response);
+?>
