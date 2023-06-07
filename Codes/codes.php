@@ -4,6 +4,20 @@ Valentina Studio
 FlySpeed SQL Query
 
 
+
+// Assuming you have initialized FullCalendar and have a reference to the calendar object
+
+// Create an event object
+const event = {
+  title: 'My Event',
+  start: '2023-06-15T10:00:00', // Start date and time in ISO 8601 format
+  end: '2023-06-15T12:00:00',   // End date and time in ISO 8601 format
+};
+
+// Add the event to the calendar
+calendar.addEvent(event);
+
+
 <?php
 // Assuming you have established a database connection
 
