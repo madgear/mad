@@ -1,3 +1,11 @@
+SELECT u.user_id, u.username, GROUP_CONCAT(l.language_name) AS languages
+FROM users u
+JOIN user_languages ul ON u.user_id = ul.user_id
+JOIN languages l ON ul.language_id = l.language_id
+WHERE u.username = 'John' -- Replace 'John' with the desired username
+GROUP BY u.user_id, u.username;
+
+
 DbSchema
 Easy Query Builder (EQB)
 Valentina Studio
