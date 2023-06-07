@@ -1,3 +1,10 @@
+
+SELECT u.id, u.name, o.order_id, o.order_date
+FROM users u
+JOIN orders o ON u.id = o.user_id
+WHERE u.id IN (SELECT id FROM users WHERE condition)
+
+
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
 
