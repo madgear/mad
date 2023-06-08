@@ -1,3 +1,12 @@
+// In main_script.js
+const { functionName } = require('./other_script.js');
+
+// Call a function from the other script
+functionName();
+
+// Rest of your script
+
+
 
 SELECT u.id, u.name, o.order_id, o.order_date
 FROM users u
