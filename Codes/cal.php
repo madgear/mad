@@ -1,3 +1,42 @@
+
+<script>
+$(document).ready(function() {
+    $('#calendar').fullCalendar({
+        // Set your calendar options here
+        // ...
+
+        // Fetch events from the server
+        events: [
+            // Add other event sources if needed
+            {
+                url: 'fetch_events.php', // PHP file to fetch events
+                color: 'blue' // Color for regular events
+            },
+            {
+                url: 'fetch_holidays.php', // PHP file to fetch holidays
+                color: 'red' // Color for holidays
+            }
+        ],
+
+        // Handle event rendering
+        eventRender: function(event, element) {
+            if (event.source.url === 'fetch_holidays.php') {
+                element.addClass('holiday-flag');
+            }
+        }
+    });
+});
+</script>
+
+<style>
+.holiday-flag {
+    background-color: red;
+    color: white;
+}
+</style>
+
+
+
 // Retrieve the event data from the AJAX request
 $title = $_POST['title'];
 $start = $_POST['start'];
