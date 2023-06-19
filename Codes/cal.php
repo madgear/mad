@@ -1,3 +1,61 @@
+<script>
+$(document).ready(function() {
+    // Function to fetch and update events
+    function updateEvents() {
+        $.ajax({
+            url: 'fetch_events.php', // PHP script to fetch events
+            type: 'GET',
+            success: function(response) {
+                // Update the events on the calendar
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('addEventSource', response);
+                $('#calendar').fullCalendar('rerenderEvents');
+            },
+            error: function() {
+                alert('Failed to fetch events');
+            }
+        });
+    }
+
+    // Set up periodic event updates
+    setInterval(updateEvents, 5000); // Update every 5 seconds (adjust as needed)
+
+    // Initialize FullCalendar
+    $('#calendar').fullCalendar({
+        // Set your calendar options here
+        // ...
+    });
+});
+</script>
+
+
+
+<?php
+// Include your database connection file
+include('db_connection.php');
+
+// Fetch events from the database
+$sql = "SELECT * FROM events";
+$result = mysqli_query($connection, $sql);
+
+$events = array();
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $events[] = array(
+        'id' => $row['id'],
+        'title' => $row['title'],
+        'start' => $row['start'],
+        'end' => $row['end'],
+        'room' => $row['room'],
+        'teacher' => $row['teacher']
+    );
+}
+
+// Return the events as JSON
+header('Content-Type: application/json');
+echo json_encode($events);
+?>
+
 
 <script>
 $(document).ready(function() {
