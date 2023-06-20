@@ -1,5 +1,64 @@
 <script>
 $(document).ready(function() {
+    // Function to check for event updates
+    function checkForUpdates() {
+        $.ajax({
+            url: 'check_updates.php', // PHP script to check for updates
+            type: 'GET',
+            success: function(response) {
+                if (response.updated) {
+                    // Events have been updated, refresh the calendar
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+
+                // Continue checking for updates
+                checkForUpdates();
+            },
+            error: function() {
+                alert('Failed to check for updates');
+            }
+        });
+    }
+
+    // Start checking for updates
+    checkForUpdates();
+
+    // Initialize FullCalendar
+    $('#calendar').fullCalendar({
+        // Set your calendar options here
+        // ...
+    });
+});
+</script>
+
+
+<?php
+// Include your database connection file
+include('db_connection.php');
+
+// Get the last update time from the client
+$lastUpdate = $_GET['lastUpdate'];
+
+// Query the database to check for updates
+$sql = "SELECT MAX(updated_at) AS lastUpdate FROM events";
+$result = mysqli_query($connection, $sql);
+$row = mysqli_fetch_assoc($result);
+$serverUpdate = $row['lastUpdate'];
+
+// Compare the last update times
+if ($serverUpdate > $lastUpdate) {
+    $response = array('updated' => true);
+} else {
+    $response = array('updated' => false);
+}
+
+// Return the response as JSON
+header('Content-Type: application/json');
+echo json_encode($response);
+?>
+
+<script>
+$(document).ready(function() {
     // Function to fetch and update events
     function updateEvents() {
         $.ajax({
