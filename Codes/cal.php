@@ -1,3 +1,20 @@
+
+// Sample multidimensional array
+var multidimensionalArray = [
+  [4, 3, 2],
+  [1, 6, 5],
+  [9, 8, 7]
+];
+
+// Sort the multidimensional array based on the first element of each subarray
+multidimensionalArray.sort(function(a, b) {
+  return a[0] - b[0];
+});
+
+// Output the sorted multidimensional array
+console.log(multidimensionalArray);
+
+
 <script>
 $(document).ready(function() {
     // Function to check for event updates
