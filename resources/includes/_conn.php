@@ -14,7 +14,7 @@ class mad_mysqlconn
 	public $debug_output;
 	public $forcenewconnection = false;
 	public $createdatabase = false;
-	//public $socket = false;
+	public $socket = false;
 	public $port = false;
 	public $clientFlags = 0;
 	public $sql;
@@ -25,16 +25,10 @@ class mad_mysqlconn
 	public $query_list_time = array();
 	public $query_list_errors = array();
 	public $info;
-	//public $transOff = 0;
-	//public $transCnt = 0;
 	public $transaction_status = true;
 	public $sysDate = 'CURDATE()';
 	public $sysTimeStamp = 'NOW()';
 	public $isoDates = true; 
-
-	//public function __construct()
-	//{
-	//}
 	
 	public function IsConnected()
 	{
@@ -42,18 +36,8 @@ class mad_mysqlconn
 	}
 
 	public function Connect($host = "", $username = "", $password = "", $database = "", $forcenew = false)
-	{
-		return $this->_connect($host, $username, $password, $database, false, $forcenew);
-	}
-
-	public function PConnect($host = "", $username = "", $password = "", $database = "")
-	{
-		return $this->_connect($host, $username, $password, $database, true, false);
-	}
-
-	public function NConnect($host = "", $username = "", $password = "", $database = "")
-	{
-		return $this->_connect($host, $username, $password, $database, false, true);
+	{		
+		return $this->_connect(false, $forcenew, $host, $username, $password, $database);
 	}
 
 	public function &Execute($sql, $inputarr = false)
@@ -68,23 +52,23 @@ class mad_mysqlconn
 		return $rs;
 	}
 
-	public function outp($text, $newline = true)
-	{
-		// global $ADODB_OUTP;
-		$this->debug_output = "(" . $this->dbtype . "): " . htmlspecialchars($text) . ". Error: " .
-		$this->ErrorMsg() . " (" . $this->ErrorNo() . ")";
+	// public function outp($text, $newline = true)
+	// {
+	// 	global $ADODB_OUTP;
+	// 	$this->debug_output = "(" . $this->dbtype . "): " . htmlspecialchars($text) . ". Error: " .
+	// 	$this->ErrorMsg() . " (" . $this->ErrorNo() . ")";
 
-		// if (defined('ADODB_OUTP')) {
-		// 	$fn = ADODB_OUTP;
-		// } else if (isset($ADODB_OUTP)) {
-		// 	$fn = $ADODB_OUTP;
-		// }
+	// 	if (defined('ADODB_OUTP')) {
+	// 		$fn = ADODB_OUTP;
+	// 	} else if (isset($ADODB_OUTP)) {
+	// 		$fn = $ADODB_OUTP;
+	// 	}
 
-		// if (defined('ADODB_OUTP') || isset($ADODB_OUTP)) {
-		// 	$fn($this->debug_output, $newline);
-		// 	return;
-		// }
-	}
+	// 	if (defined('ADODB_OUTP') || isset($ADODB_OUTP)) {
+	// 		$fn($this->debug_output, $newline);
+	// 		return;
+	// 	}
+	// }
 
 	protected function _connect($persistent, $forcenew, $host = "", $username = "", $password = "", $database = "")
 	{
@@ -99,8 +83,8 @@ class mad_mysqlconn
 		$this->persistent = $persistent;
 		$this->forcenewconnection = $forcenew;
 
-		$this->connectionId = @mysqli_init();
-		@mysqli_real_connect($this->connectionId, $this->host, $this->username, $this->password, $this->database, $this->port, $this->socket, $this->clientFlags);
+		$this->connectionId = @mysqli_init();		
+		@mysqli_real_connect($this->connectionId, $this->host, $this->username, $this->password, $this->database, $this->port, $this->socket, $this->clientFlags);		
 
 		if (mysqli_connect_errno() != 0) {
 			$this->connectionId = false;
@@ -172,43 +156,21 @@ class mad_mysqlconn
 		}
 	}
 
-	/**
-	 * Get number of affected rows from insert/delete/update query
-	 *
-	 * @return integer Affected rows
-	 */
 	public function Affected_Rows()
 	{
 		return @mysqli_affected_rows($this->connectionId);
 	}
 
-	/**
-	 * Get the last record id of an inserted item
-	 *
-	 * @return mixed The last record id of an inserted item
-	 */
 	public function Insert_ID()
 	{
 		return @mysqli_insert_id($this->connectionId);
 	}
 
-	/**
-	 * Correctly quotes a string so that all strings are escape coded
-	 *
-	 * @param string $string String to quote
-	 * @return string Single-quoted string
-	 */
 	public function qstr($string)
 	{
 		return "'" . mysqli_real_escape_string($this->connectionId, $string) . "'";
 	}
 
-	/**
-	 * Returns concatenated string
-	 *
-	 * @param string Strings to concat
-	 * @return string Concatenated string
-	 */
 	public function Concat()
 	{
 		$arr = func_get_args();
@@ -222,176 +184,13 @@ class mad_mysqlconn
 
 	}
 
-	/**
-	 * Closes database connection
-	 *
-	 * @return void
-	 */
 	public function Close()
 	{
+		var_dump($this->connectionId);
 		@mysqli_close($this->connectionId);
 		$this->connectionId = false;
 	}
 
-	/**
-	 * Starts transaction
-	 *
-	 * @param string $errfn
-	 * @return void
-	 */
-
-
-	public function StartTrans($errfn = 'ADODB_TransMonitor')
-	{
-		// if ($this->transOff > 0) {
-		// 	$this->transOff += 1;
-		// 	return;
-		// }
-		// $this->transaction_status = true;
-
-		// if ($this->debug && $this->transCnt > 0) {
-		// 	$this->outp("Bad Transaction: StartTrans called within BeginTrans");
-		// }
-
-		// $this->BeginTrans();
-		// $this->transOff = 1;
-	}
-
-	/**
-	 * Begin transaction
-	 *
-	 * @return true
-	 */
-	public function BeginTrans()
-	{
-		if ($this->transOff) {
-			return true;
-		}
-
-		$this->transCnt += 1;
-		$this->Execute('SET AUTOCOMMIT=0');
-		$this->Execute('BEGIN');
-		return true;
-	}
-
-	/**
-	 * Complete transaction
-	 *
-	 * @param boolean $autoComplete
-	 * @return boolean
-	 */
-	public function CompleteTrans($autoComplete = true)
-	{
-		if ($this->transOff > 1) {
-			$this->transOff -= 1;
-			return true;
-		}
-		$this->transOff = 0;
-		if ($this->transaction_status && $autoComplete) {
-			if (!$this->CommitTrans()) {
-				$this->transaction_status = false;
-				if ($this->debug) {
-					$this->outp("Smart Commit failed");
-				}
-
-			} else
-			if ($this->debug) {
-				$this->outp("Smart Commit occurred");
-			}
-
-		} else {
-			$this->RollbackTrans();
-			if ($this->debug) {
-				$this->outp("Smart Rollback occurred");
-			}
-
-		}
-		return $this->transaction_status;
-	}
-
-	/**
-	 * Commit transaction
-	 *
-	 * @param boolean $ok
-	 * @return true
-	 */
-	public function CommitTrans($ok = true)
-	{
-		if ($this->transOff) {
-			return true;
-		}
-
-		if (!$ok) {
-			return
-			$this->RollbackTrans();
-		}
-
-		if ($this->transCnt) {
-			$this->transCnt -= 1;
-		}
-
-		$this->Execute('COMMIT');
-		$this->Execute('SET AUTOCOMMIT=1');
-		return true;
-	}
-
-	/**
-	 * Rollback transaction
-	 *
-	 * @return true
-	 */
-	public function RollbackTrans()
-	{
-		if ($this->transOff) {
-			return true;
-		}
-
-		if ($this->transCnt) {
-			$this->transCnt -= 1;
-		}
-
-		$this->Execute('ROLLBACK');
-		$this->Execute('SET AUTOCOMMIT=1');
-		return true;
-	}
-
-	/**
-	 * Fail transaction
-	 *
-	 * @return void
-	 */
-	public function FailTrans()
-	{
-		if ($this->debug) {
-			if ($this->transOff == 0) {
-				$this->outp("FailTrans outside StartTrans/CompleteTrans");
-			} else {
-				$this->outp("FailTrans was called");
-			}
-		}
-
-		$this->transaction_status = false;
-	}
-
-	/**
-	 * Has failed transaction
-	 *
-	 * @return boolean
-	 */
-	public function HasFailedTrans()
-	{
-		if ($this->transOff > 0) {
-			return $this->transaction_status == false;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns all records in an array
-	 *
-	 * @return array All records
-	 */
 	public function &GetArray($sql, $inputarr = false)
 	{
 		$data = false;
@@ -403,22 +202,12 @@ class mad_mysqlconn
 		return $data;
 	}
 
-	/**
-	 * Returns all records in an array
-	 */
 	public function &GetAll($sql, $inputarr = false)
 	{
 		$data = &$this->GetArray($sql, $inputarr);
 		return $data;
 	}
 
-	/**
-	 * Returns first element of first row of sql statement. Recordset is disposed for you.
-	 *
-	 * @param string $sql SQL statement
-	 * @param array $inputarr Input bind array
-	 * @return mixed Field value
-	 */
 	public function GetOne($sql, $inputarr = false)
 	{
 		$ret = false;
@@ -433,13 +222,9 @@ class mad_mysqlconn
 		return $ret;
 	}
 
-	/**
-	 * Executes SQL query
-	 *
-	 * @return MySqlRecordSet|false
-	 */
 	public function &do_query($sql, $offset, $nrows, $inputarr = false)
-	{
+	{	
+
 		//global $ADODB_FETCH_MODE;
 
 		$false = false;
@@ -560,12 +345,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 	public $_numOfFields = -1;
 	public $fetchMode;
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $resultId
-	 * @param string $connectionId
-	 */
 	public function __construct($resultId, $connectionId)
 	{
 		$this->fields = array();
@@ -575,11 +354,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		$this->EOF = false;
 	}
 
-	/**
-	 * Free recordset
-	 *
-	 * @return void
-	 */
 	public function Close()
 	{
 		@mysqli_free_result($this->resultId);
@@ -587,12 +361,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		$this->resultId = false;
 	}
 
-	/**
-	 * Get field value(s) from select query
-	 *
-	 * @param string $field Field name
-	 * @return array|mixed Field value(s)
-	 */
 	public function Fields($field)
 	{
 		if (empty($field)) {
@@ -602,31 +370,16 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		}
 	}
 
-	/**
-	 * Get number of rows from select query
-	 *
-	 * @return integer Number of rows
-	 */
 	public function RecordCount()
 	{
 		return $this->_numOfRows;
 	}
 
-	/**
-	 * Get number of fields from select query
-	 *
-	 * @return integer Number of fields
-	 */
 	public function FieldCount()
 	{
 		return $this->_numOfFields;
 	}
 
-	/**
-	 * Move to next record
-	 *
-	 * @return boolean
-	 */
 	public function MoveNext()
 	{
 		$this->fields = @mysqli_fetch_array($this->resultId, $this->fetchMode);
@@ -641,11 +394,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return false;
 	}
 
-	/**
-	 * Move to the first row in the recordset
-	 *
-	 * @return boolean
-	 */
 	public function MoveFirst()
 	{
 		if ($this->_currentRow == 0) {
@@ -655,11 +403,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return $this->Move(0);
 	}
 
-	/**
-	 * Move to the last record
-	 *
-	 * @return boolean
-	 */
 	public function MoveLast()
 	{
 		if ($this->EOF) {
@@ -669,12 +412,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return $this->Move($this->_numOfRows - 1);
 	}
 
-	/**
-	 * Random access to a specific row in the recordset
-	 *
-	 * @param rowNumber is the row to move to (0-based)
-	 * @return boolean True if there still rows available, or false if there are no more rows (EOF).
-	 */
 	public function Move($rowNumber = 0)
 	{
 		if ($rowNumber == $this->_currentRow) {
@@ -699,12 +436,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return false;
 	}
 
-	/**
-	 * Perform Seek to specific row
-	 *
-	 * @param integer $row Field offset
-	 * @return boolean
-	 */
 	public function _seek($row)
 	{
 		if ($this->_numOfRows == 0) {
@@ -714,22 +445,12 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return @mysqli_data_seek($this->resultId, $row);
 	}
 
-	/**
-	 * Fill field array with first database element when query initially executed
-	 *
-	 * @return boolean
-	 */
 	public function _fetch()
 	{
 		$this->fields = @mysqli_fetch_array($this->resultId, $this->fetchMode);
 		return is_array($this->fields);
 	}
 
-	/**
-	 * Check if last record reached
-	 *
-	 * @return boolean
-	 */
 	public function EOF()
 	{
 		if ($this->_currentRow < $this->_numOfRows) {
@@ -740,12 +461,6 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		}
 	}
 
-	/**
-	 * Get all records in an array
-	 *
-	 * @param integer $nRows Number of rows to return, -1 means every row.
-	 * @return array All records
-	 */
 	public function &GetArray($nRows = -1)
 	{
 		$results = array();
@@ -758,44 +473,24 @@ class MySqlRecordSet extends MySqlRecordSetBase
 		return $results;
 	}
 
-	/**
-	 * Get all records in an array
-	 *
-	 * @param integer $nRows Number of rows to return, -1 means every row.
-	 * @return array All records
-	 */
 	public function &GetRows($nRows = -1)
 	{
 		$arr = &$this->GetArray($nRows);
 		return $arr;
 	}
 
-	/**
-	 * Get all records in an array
-	 *
-	 * @param integer $nRows Number of rows to return, -1 means every row.
-	 * @return array All records
-	 */
 	public function &GetAll($nRows = -1)
 	{
 		$arr = &$this->GetArray($nRows);
 		return $arr;
 	}
 
-	/**
-	 * Fetch field information for a table
-	 *
-	 * @return object containing the name, type and max_length
-	 */
 	public function FetchField()
 	{
 		return @mysqli_fetch_field($this->resultId);
 	}
 }
 
-/**
- * Empty recordset for updates, inserts, etc.
- */
 class MySqlRecordSetBase
 {
 	public $fields = false;

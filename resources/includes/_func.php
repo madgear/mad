@@ -1,42 +1,23 @@
 <?php
+namespace php_sys\system;?>
 
-namespace php_sys\system;
+<?php
 
-function get_route()
-{
-	$get_uri = $_SERVER['REQUEST_URI'];
-	$x_path = explode("/", $get_uri);
-	$path_cnt = count($x_path);
-	if ($path_cnt > 1) {
-		$route_uri = str_replace('/' . $x_path[1], '', $get_uri);
-	} else {
-		$route_uri = '/';
+
+function get_masteragent_token(){
+	$check_token = "select * from master_regkey";
+	$row = ExecuteRow($check_token);
+
+	if(!$row){
+		$token = _token(30,"qwertyuiopasdfghjklzxcvbnmZXCVBNMASDFGHJKLQWERTYUIOP");
+		Execute("INSERT INTO `sabong_db`.`master_regkey` (`regkey`) VALUES ('".$token."');");
+	}else{
+		$token = $row['regkey'];
 	}
-	return $route_uri;
-}
 
-function re_route($route, $kword)
-{
-	$find = array("/" . $kword, $kword);
-	$rw = str_replace($find, "", $route);
-	return $rw;
-}
 
-function ExecuteJSON($sqlcode, $postid = "")
-{
-	$rows = ExecuteRows($sqlcode);
-	if (!$rows) {
-		_msg(400, "No Record Found!");
-		exit;
-	}
-	$dataset = array(
-		"status" => 200,
-		"message" => 'success',
-		"totalrecords" => count($rows),
-		"id" => $postid,
-		"data" => $rows
-	);
-	echo json_encode($dataset);
+	return $token;
+
 }
 
 
@@ -52,6 +33,7 @@ function ExecuteQuery($query, $msg = "")
 		exit;
 	}
 }
+
 
 function fix_tags($text)
 {
@@ -71,10 +53,124 @@ function check_char($text)
 	}
 }
 
+class sabong_class
+{
+	public function csrftoken($ch , $length = 10)
+	{
+		$characters = $ch;
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $randomString;
+	}
+	public function check_usertype($uid)
+	{
+		$strsql = "SELECT user_type FROM users WHERE user_id = " . $uid;
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['user_type'];
+	}
+
+	public function check_username($uid)
+	{
+		$strsql = "SELECT user_username FROM users WHERE user_id = " . $uid;
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['user_username'];
+	}
+
+	public function check_userid($uname)
+	{
+		$strsql = "SELECT user_id FROM users WHERE user_username = '" . $uname . "'";
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['user_id'];
+	}
+
+	public function check_agenttype($uid)
+	{
+		$strsql = "SELECT agent_type FROM users WHERE user_id = " . $uid;
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['agent_type'];
+	}
+
+	public function check_usercredit($uid)
+	{
+		$strsql = "SELECT user_credits FROM users WHERE user_id = " . $uid;
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['user_credits'];
+	}
+
+	public function check_usercommission($uid)
+	{
+		$strsql = "SELECT commision_wallet FROM users WHERE user_id = " . $uid;
+		$get_rec = ExecuteRow($strsql);
+		return $get_rec['commision_wallet'];
+	}
+
+	public function route_to($utype)
+	{
+		if ($utype == 1) {
+			header('Location: ' . $DIR_PATH . 'dashboard');
+			exit;
+		} elseif (($utype == 2)) {
+			header('Location: ' . $DIR_PATH . 'site');
+			exit;
+		} elseif (($utype == 3)) {
+			header('Location: ' . $DIR_PATH . 'agent/dashboard');
+			exit;
+		} elseif (($utype == 4)) {
+			header('Location: ' . $DIR_PATH . 'office/dashboard');
+			exit;
+		} elseif (($utype == 5)) {
+			header('Location: ' . $DIR_PATH . 'admin');
+			exit;
+		} else {
+			header('Location: ' . $DIR_PATH . 'su');
+			exit;
+		}
+	}
+
+	public function check_access($u1, $u2, $u3)
+	{
+		$u_id = $_SESSION['user_id'];
+		$user_type = $this->check_usertype($u_id);
+		if ($user_type == $u1 or $user_type == $u2 or $user_type == $u3) {
+		} else {
+			echo '<div class="p-4 text-center"><h4>YOU ARE NOT ALLOWED TO ENTER THIS PAGE!</h4></div>';
+			header('Location: ' . $DIR_PATH . 'logout');
+			exit;
+		}
+	}
+}
+
+function re_route($route, $kword)
+{
+	$find = array("/" . $kword, $kword);
+	$rw = str_replace($find, "", $route);
+	return $rw;
+}
+
 function _msg($c, $m)
 {
 	$r = array("status" => $c, "message" => $m);
 	echo json_encode($r);
+}
+
+function ExecuteJSON($sqlcode, $postid)
+{
+	$rows = ExecuteRows($sqlcode);
+	if (!$rows) {
+		_msg(400, "No Record Found!");
+		exit;
+	}
+	$dataset = array(
+		"status" => 200,
+		"message" => 'success',
+		"totalrecords" => count($rows),
+		"id" => $postid,
+		"data" => $rows
+	);
+	echo json_encode($dataset);
 }
 
 function _token($length = 10, $ch = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -106,6 +202,19 @@ function _fp($str)
 {
 	$fp = filter_input(INPUT_POST, $str, FILTER_SANITIZE_STRING);
 	return $fp;
+}
+
+function get_route()
+{
+	$get_uri = $_SERVER['REQUEST_URI'];
+	$x_path = explode("/", $get_uri);
+	$path_cnt = count($x_path);
+	if ($path_cnt > 1) {
+		$route_uri = str_replace('/' . $x_path[1], '', $get_uri);
+	} else {
+		$route_uri = '/';
+	}
+	return $route_uri;
 }
 
 function &Conn($dbid = 0)
@@ -519,7 +628,7 @@ function ExecuteHtml($sql, $options = NULL, $c = NULL)
 	if (!$rs || $rs->EOF || $rs->fieldCount() < 1)
 		return "";
 	$html = "";
-	$class = @$options["tableclass"] ?: "table table-bordered ew-db-table"; // Table CSS class name
+	$class = @$options["tableclass"] ?: "table table-bordered"; // Table CSS class name
 	if ($rs->RecordCount() > 1 || $horizontal) { // Horizontal table
 		$cnt = $rs->fieldCount();
 		$html = "<table class=\"" . $class . "\">";
