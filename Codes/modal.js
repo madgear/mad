@@ -1,3 +1,17 @@
+
+function secondsToMinutesAndSeconds(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  const paddedSeconds = remainingSeconds.toString().padStart(2, '0');
+  return `${minutes}:${paddedSeconds}`;
+}
+
+// Test the function
+const seconds = 150;
+console.log(secondsToMinutesAndSeconds(seconds)); // Output: "2:30"
+
+
+
 (function($) {
     "use strict"
 
