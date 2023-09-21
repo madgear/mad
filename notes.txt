@@ -53,3 +53,21 @@ $('#summernote').summernote({
     z-index: 9999;
     /* Add more styling as needed */
 }
+
+
+// Assuming you have initialized the Summernote editor as shown before
+
+// Add a class to the selected div element
+function addClassToDiv(className) {
+    // Get the currently selected element within the editor
+    var selectedElement = $('#summernote').summernote('focus').summernote('editable').find('.note-editing-area :first-child');
+
+    // Check if the selected element is a div
+    if (selectedElement.is('div')) {
+        // Add the specified class to the div element
+        selectedElement.addClass(className);
+    }
+}
+
+// Example usage: Call the function with the desired class name
+addClassToDiv('your-custom-class');
