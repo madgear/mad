@@ -14,3 +14,42 @@ console.log(elementAtCursor);
 
 
 
+
+<div id="customPopover" style="display: none;">
+    <!-- Content for your popover -->
+    <p>This is a custom popover for div elements.</p>
+    <!-- You can add more content and styling here -->
+</div>
+
+
+
+$('#summernote').summernote({
+    callbacks: {
+        onInit: function() {
+            // Add click event listener to div elements within the editor
+            $(this).on('click', 'div', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                // Get the position of the clicked div
+                var divPosition = $(this).offset();
+
+                // Show the custom popover at the div's position
+                $('#customPopover').css({
+                    top: divPosition.top + 'px',
+                    left: divPosition.left + 'px',
+                    display: 'block'
+                });
+            });
+        }
+    }
+});
+
+
+#customPopover {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 9999;
+    /* Add more styling as needed */
+}
