@@ -1,1 +1,16 @@
-https://easyupload.io/1lw4p0
+
+// Get the Summernote editor element
+var summernoteEditor = $('#summernote');
+
+// Get the current selection and range within the editor
+var selection = window.getSelection();
+var range = selection.getRangeAt(0);
+
+// Get the HTML element at the cursor position
+var elementAtCursor = range.startContainer;
+
+// You can now work with the 'elementAtCursor' as needed
+console.log(elementAtCursor);
+
+
+
