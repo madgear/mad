@@ -3,6 +3,11 @@ alpha.genmo.ai
 dishgen.com
 
 
+
+https://easyupload.io/7v9m2f
+
+
+
 Certainly! You can achieve the same functionality using jQuery. Here's how you can do it:
 
 ```html
