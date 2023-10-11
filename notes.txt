@@ -5,7 +5,7 @@ dishgen.com
 
 
 https://easyupload.io/7v9m2f
-
+https://easyupload.io/4xc2df
 
 
 Certainly! You can achieve the same functionality using jQuery. Here's how you can do it:
