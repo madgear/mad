@@ -12,3 +12,20 @@ Private Sub btnDelete_Click()
     DoCmd.RunSQL "DELETE FROM YourTableName WHERE ID = " & Me.txtID & ";"
     'Replace YourTableName, txtID, and ID with your table and field names.
 End Sub
+
+Private Sub Form_Load()
+    Dim strSQL As String
+    strSQL = "SELECT Field1, Field2 FROM YourTable WHERE YourCondition;"
+    ' Replace Field1, Field2, YourTable, and YourCondition with your field names, table name, and SQL criteria.
+
+    Dim rs As Recordset
+    Set rs = CurrentDb.OpenRecordset(strSQL)
+
+    If Not rs.EOF Then
+        Me.txtField1.Value = rs!Field1
+        Me.txtField2.Value = rs!Field2
+    End If
+
+    rs.Close
+    Set rs = Nothing
+End Sub
