@@ -1,72 +1,14 @@
-photoeditor.ai
-alpha.genmo.ai
-dishgen.com
+Private Sub btnSave_Click()
+    DoCmd.RunSQL "INSERT INTO YourTableName (Field1, Field2) VALUES ('" & Me.txtField1 & "', '" & Me.txtField2 & "');"
+    'Replace YourTableName, Field1, Field2, txtField1, and txtField2 with your table and field names.
+End Sub
 
+Private Sub btnSave_Click()
+    DoCmd.RunSQL "UPDATE YourTableName SET Field1 = '" & Me.txtField1 & "', Field2 = '" & Me.txtField2 & "' WHERE ID = " & Me.txtID & ";"
+    'Replace YourTableName, Field1, Field2, txtField1, txtField2, and txtID with your table and field names.
+End Sub
 
-
-https://easyupload.io/7v9m2f
-https://easyupload.io/4xc2df
-
-
-Certainly! You can achieve the same functionality using jQuery. Here's how you can do it:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>jQuery Example</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-
-<div class="category">test
-    <div class="category">test 2
-        <div class="category">test 3
-            <div class="category">test 4
-                <div class="category">test 5</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="category">1</div>
-
-<script>
-$(document).ready(function() {
-    // Get the last category element with class "category"
-    var lastCategory = $('.category:last');
-
-    if (lastCategory.length > 0) {
-        // Check if there are other elements inside the last category
-        var childElements = lastCategory.find('*');
-
-        if (childElements.length > 0) {
-            // There are other elements inside the last category
-            console.log("There are other elements inside the last category:");
-            console.log(childElements);
-        } else {
-            // There are no other elements inside the last category
-            console.log("There are no other elements inside the last category.");
-        }
-
-        // Find the main category by traversing up the DOM tree
-        var mainCategory = lastCategory.closest('.category');
-
-        if (mainCategory.length > 0) {
-            // Do something with the main category
-            console.log("Main category class: " + mainCategory.attr('class'));
-        } else {
-            // No main category found
-            console.log("No main category found.");
-        }
-    } else {
-        // No category elements found
-        console.log("No category elements found.");
-    }
-});
-</script>
-
-</body>
-</html>
-```
-
-This jQuery code does the same thing as the previous JavaScript example. It selects the last element with the class "category," checks for other elements inside it, and finds the main category while using jQuery's selectors and methods.
+Private Sub btnDelete_Click()
+    DoCmd.RunSQL "DELETE FROM YourTableName WHERE ID = " & Me.txtID & ";"
+    'Replace YourTableName, txtID, and ID with your table and field names.
+End Sub
