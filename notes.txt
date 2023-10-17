@@ -1,3 +1,67 @@
+
+
+Sub UpdateHTMLCode()
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim htmlCode As String
+    Dim recordID As Long ' Replace with the actual primary key field
+
+    ' Set the path to your Access database
+    Set db = CurrentDb
+
+    ' Replace "YourTableName" with the name of your table
+    Set rs = db.OpenRecordset("YourTableName", dbOpenDynaset)
+
+    ' Set the primary key field value of the record to update
+    recordID = 123 ' Replace with the actual primary key value
+
+    ' Find the record to update based on the primary key
+    rs.FindFirst "[PrimaryKeyField] = " & recordID ' Replace "PrimaryKeyField" with your primary key field
+
+    ' Check if the record was found
+    If Not rs.NoMatch Then
+        ' Set the HTML code you want to update
+        htmlCode = "<html><body><h1>This is the updated HTML code</h1></body></html>"
+        
+        ' Update the HTML field with the new code
+        rs.Edit
+        rs("HTMLField") = htmlCode ' Replace "HTMLField" with the actual field name
+        rs.Update
+    Else
+        MsgBox "Record not found."
+    End If
+
+    ' Close the recordset and the database
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+End Sub
+
+Sub SaveHTMLCode()
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim htmlCode As String
+
+    ' Set the path to your Access database
+    Set db = CurrentDb
+    
+    ' Open the table where you want to save the HTML code
+    Set rs = db.OpenRecordset("YourTableName", dbOpenTable)
+
+    ' Set the HTML code you want to save
+    htmlCode = "<html><body><h1>This is HTML code</h1></body></html>"
+    
+    ' Add the HTML code to a new record
+    rs.AddNew
+    rs("HTMLField") = htmlCode ' Replace "HTMLField" with the actual field name
+    rs.Update
+
+    ' Close the recordset and the database
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+End Sub
+
 Private Sub btnSave_Click()
     DoCmd.RunSQL "INSERT INTO YourTableName (Field1, Field2) VALUES ('" & Me.txtField1 & "', '" & Me.txtField2 & "');"
     'Replace YourTableName, Field1, Field2, txtField1, and txtField2 with your table and field names.
