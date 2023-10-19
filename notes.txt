@@ -1,4 +1,7 @@
 
+Create a Startup Form:Design a form that you want to display when the database is opened.Open the form in Design View.Go to the "Property Sheet" and set the "Default View" property to "Single Form."Save and close the form.Set the Startup Options:Open the database in Microsoft Access.Go to the "File" tab.Select "Options."In the Access Options window, click on "Current Database" on the left.Configure the Startup Options:In the "Display Form" dropdown, select the form you want to open by default.Optionally, you can set a password to restrict access to the database.Uncheck the "Display Navigation Pane" option.Save the changes and close the Access Options window.Test the Configuration:Close and reopen the database.It should now open directly to the specified form, and the navigation pane should be hidden.This configuration will make it so that users can only interact with the form and won't have direct access to tables in the navigation pane. If you've set a password, users will need to enter it to access the navigation pane.Remember that while this hides the navigation pane, users with advanced knowledge of Access can still access tables and other objects through various methods. Therefore, it's not a foolproof security measure for protecting your data, and you should use other security measures as needed.
+
+
 
 Sub UpdateHTMLCode()
     Dim db As DAO.Database
