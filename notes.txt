@@ -4,3 +4,6 @@ file 'video2.mp4'
 file 'audio2.mp3'
 
 ffmpeg -f concat -safe 0 -i filelist.txt -c:v copy -c:a aac -strict experimental output.mp4
+
+
+If you want to make an Access form combo box readonly so that users can select values from the list but not type or edit the text directly, you can follow these steps:Open your Access database and go to the form containing the combo box.In Design View, select the combo box by clicking on it.In the Property Sheet, find the "Limit To List" property. Set this property to "Yes."Also, make sure the "Allow Value List Edits" property is set to "No."By setting "Limit To List" to "Yes" and "Allow Value List Edits" to "No," you restrict users from typing or editing text directly in the combo box. They will only be able to select values from the predefined list.Save your form, and in Form View, the combo box should allow selections from the list but not direct text editing.
