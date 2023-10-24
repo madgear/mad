@@ -34,3 +34,48 @@ Sub DownloadFile()
         MsgBox "Failed to download the file."
     End If
 End Sub
+
+Sub ExportToJSON()
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim json As Object
+    Dim fileNum As Integer
+    Dim jsonData As String
+
+    ' Set the database and recordset
+    Set db = CurrentDb
+    Set rs = db.OpenRecordset("YourTable")
+
+    ' Create a JSON object
+    Set json = CreateObject("Scripting.Dictionary")
+
+    ' Loop through the records and add them to the JSON object
+    Do While Not rs.EOF
+        Dim recordData As Object
+        Set recordData = CreateObject("Scripting.Dictionary")
+        
+        ' Replace these field names with the fields you want to export
+        recordData("Field1") = rs("Field1")
+        recordData("Field2") = rs("Field2")
+
+        ' Add the record to the JSON object
+        json.Add "Record" & rs.AbsolutePosition, recordData
+
+        rs.MoveNext
+    Loop
+
+    ' Serialize the JSON object to a string
+    jsonData = json("Record" & 1)
+
+    ' Specify the path and filename for the JSON file
+    fileNum = FreeFile
+    Open "C:\Path\To\Your\File.json" For Output As #fileNum
+    Print #fileNum, jsonData
+    Close #fileNum
+
+    ' Clean up
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+    Set json = Nothing
+End Sub
