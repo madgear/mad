@@ -1,3 +1,7 @@
+Me.b.Object.Silent = False
+
+b.Object.Navigate2 html_editor
+
 file 'video1.mp4'
 file 'audio1.mp3'
 file 'video2.mp4'
