@@ -1,0 +1,216 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor</title>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100%;
+        resize: none;
+        background-color: black;
+        color: white;
+      }
+
+      table {
+        height: 100%;
+        width: 100%;
+      }
+
+      td {
+        vertical-align: top;
+      }
+
+      li {
+        margin-left: 5px;
+      }
+
+      .case-coding {
+        border: 1px;
+        border-collapse: collapse;
+      }
+
+      .case-coding td {
+        border: 1px solid black;
+      }
+
+      #html-preview {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td width="65%">
+          <textarea
+            id="txt-code"
+            class="form-control form-control-sm bg-dark text-white"
+          ></textarea>
+        </td>
+        <td width="35%">
+          <div id="html-preview">
+
+            <li style="list-style-type: decimal;">ONE</li>
+            <li style="list-style-type: '2. ';">TWO</li>
+
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+
+  <script>
+    var numeric_ones = [],
+      numeric_twos = [];
+    var text_brackets = [
+    ];
+    var txt_area = document.getElementById("txt-code");
+
+    for (var n = 1; n < 9; n++) {
+      numeric_ones.push(n + ".");
+    }
+    for (var n = 10; n < 99; n++) {
+      numeric_ones.push(n + ".");
+    }
+
+    txt_area.onfocus = function () {
+      generate_html();
+    };
+
+    txt_area.onchange = function () {
+      generate_html();
+    };
+
+    function test() {
+      alert("test");
+    }
+
+    function generate_html() {
+      var get_txt_code = document.getElementById("txt-code").value;
+
+      function trimString(str) {
+        return str.replace(/^\s+|\s+$/g, "");
+      }
+
+      get_txt_code = get_txt_code.replace(/"/gi, "");
+
+      var get_lines = get_txt_code.split("\n");
+      var coding = "";
+      var create_preview = document.createElement("div");
+      var html_preview = document.getElementById("html-preview");
+      var ul_check = 0;
+
+      for (var x = 0; x < get_lines.length; x++) {
+        if (get_lines[x] !== "") {
+          var correct_num = get_lines[x].replace(/．/gi, ". ");
+
+          var num_ones = -1;
+
+          for (var n = 0; n < numeric_ones.length; n++) {
+            if (trimString(correct_num.substring(0, 2)) == numeric_ones[n]) {
+              num_ones = n;
+              break;
+            }
+          }
+
+          var num_twos = -1;
+
+          for (var n = 0; n < numeric_twos.length; n++) {
+            if (trimString(correct_num.substring(0, 2)) == numeric_twos[n]) {
+              num_twos = n;
+              break;
+            }
+          }
+
+          //var num_ones = numeric_ones.indexOf(correct_num.substring(0, 2));
+          //var num_twos = numeric_twos.indexOf(correct_num.substring(0, 3));
+
+          if (trimString(correct_num.substring(0, 1)) == "・") {
+            coding +=
+              "<li style='list-style-type:disc;'>" +
+              correct_num.replace("・", "") +
+              "</li>";
+          } else if (num_ones !== -1) {
+            coding +=
+              '<li style="list-style-type: `' +
+              numeric_ones[num_ones] +
+              '`">' +
+              correct_num.replace(numeric_ones[num_ones], "") +
+              "</li>";
+          } else if (num_twos !== -1) {
+            var ltype= "style=";
+            coding += '<li style="list-style-type: ' + numeric_ones[num_twos] + '. ">' + correct_num.replace(numeric_ones[num_twos], "") + "</li>";
+          } else if (correct_num.substring(0, 10) == "----------") {
+            var i = x;
+            var tr_code = "";
+            var n = 1;
+            var br = 0;
+
+            for (var n = 1; n < 20; n++) {
+              if (get_lines[i + n].substring(0, 10) == "----------") {
+                get_lines[i + n] = "<delete></delete>";
+                break;
+              }
+
+              if (n == 1) {
+                coding += "<span>" + get_lines[i + n] + "</span>";
+              } else {
+                var td_x = get_lines[i + n].split("：");
+                tr_code +=
+                  "<tr><td>" + td_x[0] + "</td><td>" + td_x[1] + "</td></tr>";
+              }
+              get_lines[i + n] = "<delete></delete>";
+            }
+
+            coding += "<table class='case-coding'>" + tr_code + "</table>";
+          } else {
+            coding += "<div>" + get_lines[x] + "</div>";
+          }
+        } else {
+          coding += "<div>&nbsp;</div>";
+        }
+      }
+
+      create_preview.innerHTML = coding;
+      var get_divs = create_preview.getElementsByTagName("div");
+      for (var i = 0; i < get_divs.length; i++) {
+        var get_indx = -1;
+        for (var n = 0; n < text_brackets.length; n++) {
+          if (text_brackets[n] == get_divs[i].innerText) {
+            get_indx = n;
+            break;
+          }
+        }
+
+        if (get_indx !== -1) {
+          get_divs[i].innerHTML = "<b>" + text_brackets[get_indx] + "</b>";
+        }
+
+        // var get_indx = text_brackets.indexOf(get_divs[i].innerText);
+        // if (get_indx !== -1) {
+        //     get_divs[i].innerHTML = "<b>" + text_brackets[get_indx] + "</b>"
+        // }
+      }
+
+      html_preview.innerHTML = create_preview.innerHTML;
+    }
+
+    if (document.attachEvent) {
+      document.attachEvent("onreadystatechange", function () {
+        if (document.readyState === "complete") {
+        }
+      });
+    }
+
+    // document.addEventListener('DOMContentLoaded', async (e) => {
+
+    // });
+  </script>
+</html>
