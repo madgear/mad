@@ -1,3 +1,86 @@
+
+Function HasNumberedList(line As String) As Boolean
+    Dim numberedListPattern As Object
+    Set numberedListPattern = CreateObject("VBScript.RegExp")
+    With numberedListPattern
+        .Global = True
+        .IgnoreCase = False
+        .MultiLine = True
+        .Pattern = "^\d+\.\s"
+    End With
+    HasNumberedList = numberedListPattern.Test(line)
+End Function
+
+Function TextToHTML(text As String) As String
+    Dim lines() As String
+    Dim inList As Boolean
+    Dim listType As String
+    Dim html As String
+    Dim i As Integer
+    Dim line As String
+    Dim listItem As String
+    
+    lines = Split(text, vbLf)
+    inList = False
+    listType = "ul"
+    html = ""
+    
+    For i = LBound(lines) To UBound(lines)
+        line = Trim(lines(i))
+        
+        If HasNumberedList(line) Or Left(line, 1) = "・" Then
+            If Not inList Then
+                inList = True
+                If Left(line, 1) = "・" Then
+                    listType = "ul"
+                Else
+                    listType = "ol"
+                End If
+                html = html & "<" & listType & ">"
+            End If
+            listItem = Trim(Replace(Replace(line, ".", ""), "・", ""))
+            html = html & "<li>" & listItem & "</li>"
+        Else
+            If i > LBound(lines) Then
+                Dim checkLast As Boolean
+                checkLast = HasNumberedList(Trim(lines(i - 1)))
+                If checkLast = True Then
+                    inList = True
+                End If
+            End If
+            If inList Then
+                inList = False
+                html = html & "</" & listType & ">"
+            End If
+            If line <> "" Then
+                html = html & "<div>" & line & "</div>"
+            Else
+                html = html & "<div>&nbsp;</div>"
+            End If
+        End If
+    Next i
+    
+    If inList Then
+        inList = False
+        html = html & "</" & listType & ">"
+    End If
+    
+    TextToHTML = html
+End Function
+
+Sub ConvertTextToHTML()
+    Dim inputText As String
+    Dim htmlOutput As String
+    Dim container As Object
+    
+    inputText = ThisWorkbook.Sheets("Sheet1").Range("A1").Value ' Change to your input cell
+    htmlOutput = TextToHTML(inputText)
+    
+    Set container = ThisWorkbook.Sheets("Sheet1").Range("B1") ' Change to your output cell
+    container.Value = htmlOutput
+End Sub
+
+
 test code
 
 1. number1
