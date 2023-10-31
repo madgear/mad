@@ -1,4 +1,18 @@
 
+Dim webBrowser As Object
+Set webBrowser = Me.WebBrowserControlName.Object ' Replace "WebBrowserControlName" with the actual name of your Web Browser control.
+
+Dim divElements As Object
+Set divElements = webBrowser.Document.getElementsByTagName("div")
+
+Dim divElement As Object
+
+For Each divElement In divElements
+    ' Perform actions on each divElement
+    ' For example, you can access the inner text of each div
+    MsgBox divElement.innerText
+Next divElement
+
 Function HasNumberedList(line As String) As Boolean
     Dim numberedListPattern As Object
     Set numberedListPattern = CreateObject("VBScript.RegExp")
